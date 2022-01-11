@@ -15,11 +15,13 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float dashDistance = 5;
     private int dashDirection = 1;
     [SerializeField] GameObject dashTrail;
+    [SerializeField] float dashSpeed = 0.25f;
 
 
     [SerializeField] private float speed = 10.0f;
     [SerializeField] private Rigidbody playerRb;
     [SerializeField] private GameObject player;
+    private Vector3 endPos;
 
     void Awake()
     {
@@ -93,8 +95,24 @@ public class PlayerMove : MonoBehaviour
     }
     void DashMovement()
     {
-        //Código temporal, esto se reemplazará por un coroutine
-        transform.position = new Vector3(transform.position.x + dashDistance * dashDirection, transform.position.y, transform.position.z);
         dashTrail.SetActive(true);
+        endPos = new Vector3(transform.position.x + dashDistance*dashDirection, transform.position.y, transform.position.z);
+        StartCoroutine(LerpPosition(endPos,dashSpeed));
+        
+    }
+
+    IEnumerator LerpPosition(Vector3 targetPosition, float duration)
+    {
+
+        float time = 0;
+        Vector3 startPosition = transform.position;
+
+        while (time < duration)
+        {
+            transform.position = Vector3.Lerp(startPosition,targetPosition, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = targetPosition;
     }
 }
