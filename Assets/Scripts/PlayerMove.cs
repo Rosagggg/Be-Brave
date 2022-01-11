@@ -12,6 +12,8 @@ public class PlayerMove : MonoBehaviour
     //Horizontal Movement variables
     private float horizontalInput;
     private bool lookingRight = true;
+    [SerializeField] private float dashDistance = 5;
+    private int dashDirection = 1;
 
 
     [SerializeField] private float speed = 10.0f;
@@ -60,17 +62,24 @@ public class PlayerMove : MonoBehaviour
          //   playerAnim.SetBool(IsWalking, false);
         }
 
+        if (Input.GetButtonDown("Fire1") && isOnFloor)
+        {
+            transform.position = new Vector3(transform.position.x + dashDistance *dashDirection, transform.position.y, transform.position.z);
+        }
+
     }
     void TurnRight()
     {
         player.transform.eulerAngles = new Vector3(player.transform.eulerAngles.x, 0, 0);
         lookingRight = true;
+        dashDirection = 1;
     }
 
     void TurnLeft()
     {
         player.transform.eulerAngles = new Vector3(player.transform.eulerAngles.x, 180, 0);
         lookingRight = false;
+        dashDirection = -1;
     }
         private void OnCollisionEnter(Collision collision)
     {
