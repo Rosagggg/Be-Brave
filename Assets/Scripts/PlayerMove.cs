@@ -30,7 +30,7 @@ public class PlayerMove : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
 
-        if (Input.GetKeyDown(KeyCode.Space) && isOnFloor)
+        if (Input.GetButtonDown("Jump") && isOnFloor)
         {
            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
            isOnFloor = false;
