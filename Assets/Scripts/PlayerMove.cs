@@ -14,6 +14,7 @@ public class PlayerMove : MonoBehaviour
     private bool lookingRight = true;
     [SerializeField] private float dashDistance = 5;
     private int dashDirection = 1;
+    [SerializeField] GameObject dashTrail;
 
 
     [SerializeField] private float speed = 10.0f;
@@ -29,7 +30,7 @@ public class PlayerMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        dashTrail.SetActive(false);
     }
 
     // Update is called once per frame
@@ -48,12 +49,14 @@ public class PlayerMove : MonoBehaviour
         if (horizontalInput < 0)
         {
             lookingRight = false;
+            dashTrail.SetActive(false);
             //   playerAnim.SetBool(IsWalking, true);
             TurnLeft();
         }
         else if (horizontalInput > 0)
         {
             lookingRight = true;
+            dashTrail.SetActive(false);
             //   playerAnim.SetBool(IsWalking, true);
             TurnRight();
         }
@@ -64,7 +67,7 @@ public class PlayerMove : MonoBehaviour
 
         if (Input.GetButtonDown("Fire1") && isOnFloor)
         {
-            transform.position = new Vector3(transform.position.x + dashDistance *dashDirection, transform.position.y, transform.position.z);
+            DashMovement();
         }
 
     }
@@ -87,5 +90,11 @@ public class PlayerMove : MonoBehaviour
         {
             isOnFloor = true;
         }
+    }
+    void DashMovement()
+    {
+        //Código temporal, esto se reemplazará por un coroutine
+        transform.position = new Vector3(transform.position.x + dashDistance * dashDirection, transform.position.y, transform.position.z);
+        dashTrail.SetActive(true);
     }
 }
