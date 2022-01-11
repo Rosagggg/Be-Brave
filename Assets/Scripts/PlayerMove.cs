@@ -8,9 +8,15 @@ public class PlayerMove : MonoBehaviour
     public float jumpForce = 10;
     public float gravityModifier = 2.5f;
     public bool isOnFloor = true;
+
+    //Horizontal Movement variables
     private float horizontalInput;
+    private bool lookingRight = true;
+
+
     [SerializeField] private float speed = 10.0f;
     [SerializeField] private Rigidbody playerRb;
+    [SerializeField] private GameObject player;
 
     void Awake()
     {
@@ -27,8 +33,6 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
 
         if (Input.GetButtonDown("Jump") && isOnFloor)
         {
@@ -36,8 +40,39 @@ public class PlayerMove : MonoBehaviour
            isOnFloor = false;
         }
 
+        horizontalInput = Input.GetAxis("Horizontal");
+        transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
+
+        if (horizontalInput < 0)
+        {
+            lookingRight = false;
+            //   playerAnim.SetBool(IsWalking, true);
+            TurnLeft();
+        }
+        else if (horizontalInput > 0)
+        {
+            lookingRight = true;
+            //   playerAnim.SetBool(IsWalking, true);
+            TurnRight();
+        }
+        else
+        {
+         //   playerAnim.SetBool(IsWalking, false);
+        }
+
     }
-    private void OnCollisionEnter(Collision collision)
+    void TurnRight()
+    {
+        player.transform.eulerAngles = new Vector3(player.transform.eulerAngles.x, 0, 0);
+        lookingRight = true;
+    }
+
+    void TurnLeft()
+    {
+        player.transform.eulerAngles = new Vector3(player.transform.eulerAngles.x, 180, 0);
+        lookingRight = false;
+    }
+        private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Floor"))
         {
