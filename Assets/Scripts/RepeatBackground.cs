@@ -6,20 +6,17 @@ public class RepeatBackground : MonoBehaviour
 {
     private Vector3 startPos;
     private Vector3 secondPos;
-    [SerializeField] GameObject secondBackground;
-    private float repeatLength;
-    // Start is called before the first frame update
-    void Start()
+
+    void Awake()
     {
         startPos = transform.position;
-        secondPos = secondBackground.GetComponent<RepeatBackground2>().startPos;
-        repeatLength = secondBackground.GetComponent<RepeatBackground2>().repeatLength;
+        secondPos = new Vector3(transform.position.x + 100, transform.position.y, transform.position.z);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.x < startPos.x - repeatLength)
+        if (transform.position.x < startPos.x - 100)
         {
             transform.position = secondPos;
         }

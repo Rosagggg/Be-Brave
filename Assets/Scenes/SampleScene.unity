@@ -723,7 +723,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06fed0246bf0a184e945c5dbec7c2679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondBackground: {fileID: 2035786989}
 --- !u!1 &584567526
 GameObject:
   m_ObjectHideFlags: 0
@@ -1861,5 +1860,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 848c635def7b2284780da23cac2e8e8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPos: {x: 0, y: 0, z: 0}
-  repeatLength: 100

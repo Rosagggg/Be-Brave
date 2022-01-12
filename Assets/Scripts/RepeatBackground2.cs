@@ -4,19 +4,16 @@ using UnityEngine;
 
 public class RepeatBackground2 : MonoBehaviour
 {
-    public Vector3 startPos;
-    public float repeatLength = 100;
+    private Vector3 startPos;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         startPos = transform.position;
-       // secondPos = secondBackground.GetComponent<RepeatBackground>().startPos;
     }
-
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.x < startPos.x - repeatLength*2)
+        if (transform.position.x < startPos.x - 200)
         {
             transform.position = startPos;
         }
