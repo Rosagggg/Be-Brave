@@ -7,22 +7,27 @@ public class PlayerMove : MonoBehaviour
     //Jumping variables
     public float jumpForce = 10;
     public float gravityModifier = 2.5f;
-    public bool isOnFloor = true;
+    private bool isOnFloor = true;
+    [SerializeField] private Rigidbody playerRb;
 
     //Horizontal Movement variables
     private float horizontalInput;
     private bool lookingRight = true;
-    [SerializeField] private float dashDistance = 5;
-    private int dashDirection = 1;
-    [SerializeField] GameObject dashTrail;
-    [SerializeField] float dashSpeed = 0.25f;
-
-
+    [SerializeField] private GameObject playerMesh;
     [SerializeField] private float speed = 10.0f;
-    [SerializeField] private Rigidbody playerRb;
-    [SerializeField] private GameObject player;
-    private Vector3 endPos;
 
+    //Dashing variables
+    private int dashDirection = 1;
+    private Vector3 endPos;
+    [SerializeField] private float dashDistance = 5;
+    [SerializeField] float dashTime = 0.25f;
+    [SerializeField] GameObject dashTrail;
+
+    //Climbing to Roof variables
+    private bool isOnLedge = false;
+    public bool onRoof;
+    
+    
     void Awake()
     {
         // reset gravity
@@ -39,28 +44,23 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetButtonDown("Jump") && isOnFloor)
+        if ((Input.GetButtonDown("Jump") && isOnFloor) || (Input.GetButtonDown("Jump") && isOnLedge))
         {
            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
            isOnFloor = false;
+           isOnLedge = false;
         }
 
         horizontalInput = Input.GetAxis("Horizontal");
         transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
 
-        if (horizontalInput < 0)
+        if (horizontalInput > 0)
         {
-            lookingRight = false;
-            dashTrail.SetActive(false);
-            //   playerAnim.SetBool(IsWalking, true);
-            TurnLeft();
-        }
-        else if (horizontalInput > 0)
-        {
-            lookingRight = true;
-            dashTrail.SetActive(false);
-            //   playerAnim.SetBool(IsWalking, true);
             TurnRight();
+        }
+        else if (horizontalInput < 0)
+        {
+            TurnLeft();
         }
         else
         {
@@ -71,33 +71,57 @@ public class PlayerMove : MonoBehaviour
         {
             DashMovement();
         }
+        if (Input.GetButtonDown("Fire1") && isOnLedge)
+        {
+            ClimbtoRoof();
+        }
 
     }
     void TurnRight()
     {
-        player.transform.eulerAngles = new Vector3(player.transform.eulerAngles.x, 0, 0);
         lookingRight = true;
+        playerMesh.transform.eulerAngles = new Vector3(playerMesh.transform.eulerAngles.x, 0, 0);
         dashDirection = 1;
+        dashTrail.SetActive(false);
+        //   playerAnim.SetBool(IsWalking, true);
     }
 
     void TurnLeft()
     {
-        player.transform.eulerAngles = new Vector3(player.transform.eulerAngles.x, 180, 0);
         lookingRight = false;
+        playerMesh.transform.eulerAngles = new Vector3(playerMesh.transform.eulerAngles.x, 180, 0);
         dashDirection = -1;
+        dashTrail.SetActive(false);
+        // playerAnim.SetBool(IsWalking, true);
     }
-        private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Floor"))
         {
             isOnFloor = true;
+            onRoof = false;
         }
+        if (collision.gameObject.CompareTag("StairsLedge"))
+        {
+            isOnLedge = true;
+            onRoof = false;
+        }
+        if (collision.gameObject.CompareTag("Roof"))
+        {
+            isOnLedge = false;
+            isOnFloor = true;
+        }
+    }
+    public void ClimbtoRoof()
+    {
+        transform.position = new Vector3(transform.position.x + 5, transform.position.y + 6, transform.position.z);
+        onRoof = true;
     }
     void DashMovement()
     {
         dashTrail.SetActive(true);
         endPos = new Vector3(transform.position.x + dashDistance*dashDirection, transform.position.y, transform.position.z);
-        StartCoroutine(LerpPosition(endPos,dashSpeed));
+        StartCoroutine(LerpPosition(endPos,dashTime));
         
     }
 
