@@ -5,6 +5,7 @@ using UnityEngine;
 public class CameraFollowPlayer : MonoBehaviour
 {
     [SerializeField] Vector3 offset = new Vector3(0, 3, -7);
+    [SerializeField] Vector3 roofOffset = new Vector3(0, 5, 0);
     [SerializeField] GameObject player;
     private PlayerMove playerScript;
     // Start is called before the first frame update
@@ -18,11 +19,11 @@ public class CameraFollowPlayer : MonoBehaviour
     {
         if (playerScript.onRoof)
         {
-            transform.position = new Vector3(player.transform.position.x, 5, 0) + offset;
+            transform.position = new Vector3(player.transform.position.x, 0,player.transform.position.z) + offset + roofOffset;
         }
         else
         {
-            transform.position = new Vector3(player.transform.position.x, 0, 0) + offset;
+            transform.position = new Vector3(player.transform.position.x, 0, player.transform.position.z) + offset;
         }
         
     }
